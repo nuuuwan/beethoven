@@ -29,14 +29,14 @@ class Composition:
     def set_tempo(self, time: Time, tempo: int):
         self.midi.addTempo(0, time.value, tempo)
 
-    def new_part(self, program: int, part_name: str, time: Time = None):
+    def new_part(self, program: int, time: Time = None):
         if time is None:
             time = Time(0)
         track = len(self.parts)
         channel = track
         part = Part(self, track, channel, program)
         self.midi.addProgramChange(track, channel, time.value, program)
-        self.midi.addTrackName(track, time.value, part_name)
+
         self.parts.append(part)
         return part
 
