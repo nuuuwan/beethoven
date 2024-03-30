@@ -6,10 +6,10 @@ from beethoven import (Composition, Duration, Instrument, Note, Pitch, Scale,
 test_comp = Composition.new('test')
 test_comp.set_tempo(Time(0), Tempo.ALLEGRO)
 
-harp = test_comp.new_part(Instrument.STRINGS.ORCHESTRAL_HARP)
-strings = test_comp.new_part(Instrument.ENSEMBLE.STRING_ENSEMBLE_1)
-choral = test_comp.new_part(Instrument.ENSEMBLE.CHOIR_AAHS)
-organ = test_comp.new_part(Instrument.ORGAN.CHURCH_ORGAN)
+harp = test_comp.new_part(Instrument.STRINGS.ORCHESTRAL_HARP, "Harp")
+strings = test_comp.new_part(Instrument.ENSEMBLE.STRING_ENSEMBLE_1, "Strings")
+choral = test_comp.new_part(Instrument.ENSEMBLE.CHOIR_AAHS, "Voices")
+organ = test_comp.new_part(Instrument.ORGAN.CHURCH_ORGAN, "Organ")
 
 pitch0 = Pitch('C3')
 for i, interval in enumerate(Scale.PENTATONIC):
