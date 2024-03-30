@@ -33,6 +33,7 @@ class Instrument:
         STRING_ENSEMBLE_1 = 48
         STRING_ENSEMBLE_2 = 49
         CHOIR_AAHS = 52
+        SYNTH_STRINGS_1 = 50
         ORCHESTRA_HIT = 55
 
     class BRASS:
@@ -56,3 +57,10 @@ class Instrument:
         SHAKUHACHI = 77
         WHISTLE = 78
         OCARINA = 79
+
+    class SYNTH_PAD:
+        NEW_AGE = 88
+        WARM = 89
+
+    class ETHNIC:
+        SHAMISEN = 106

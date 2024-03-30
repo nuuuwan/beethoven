@@ -1,31 +1,55 @@
 import os
+import random
 
-from beethoven import (Composition, Duration, Instrument, Note, Pitch, Scale,
-                       Tempo, Time, Volume)
+from beethoven import (Composition, Duration, Instrument, Interval, Note,
+                       Pitch, Tempo, Time, Volume)
 
 test_comp = Composition.new('test')
-test_comp.set_tempo(Time(0), Tempo.ALLEGRO)
+test_comp.set_tempo(Time(0), Tempo.ANDANTE)
 
-harp = test_comp.new_part(Instrument.STRINGS.ORCHESTRAL_HARP)
-strings = test_comp.new_part(Instrument.ENSEMBLE.STRING_ENSEMBLE_1)
-choral = test_comp.new_part(Instrument.ENSEMBLE.CHOIR_AAHS)
-organ = test_comp.new_part(Instrument.ORGAN.CHURCH_ORGAN)
 
-pitch0 = Pitch('C3')
-for i, interval in enumerate(Scale.PENTATONIC):
-    pitch = pitch0 + interval
+motif1 = [
+    (Interval(-5), Duration.CROTCHET),
+    (Interval(0), Duration.CROTCHET),
+    (Interval(2), Duration.CROTCHET),
+    (Interval(4), Duration.CROTCHET),
+]
+motif_duration = sum(duration for __, duration in motif1)
+pitch00 = Pitch(random.randint(50, 56))
 
-    harp + Note(
-        Time(i), pitch + 'Octave', Duration.CROTCHET, Volume.MEZZO_FORTE
-    )
-    strings + Note(
-        Time(i), pitch + 'Minor 6th', Duration.CROTCHET, Volume.MEZZO_FORTE
-    )
-    choral + Note(
-        Time(i), pitch + 'Major 3rd', Duration.CROTCHET, Volume.MEZZO_FORTE
-    )
-    organ + Note(
-        Time(i), pitch - 'Octave', Duration.CROTCHET, Volume.MEZZO_FORTE
-    )
+for part, pitch_delta in [
+    (test_comp.new_part(Instrument.STRINGS.ORCHESTRAL_HARP), 12),
+    # voices
+    (test_comp.new_part(Instrument.ENSEMBLE.CHOIR_AAHS), 12),
+    (test_comp.new_part(Instrument.ENSEMBLE.CHOIR_AAHS), 0),
+    (test_comp.new_part(Instrument.ENSEMBLE.CHOIR_AAHS), 0),
+    (test_comp.new_part(Instrument.ENSEMBLE.CHOIR_AAHS), -12),
+    # organ
+    (test_comp.new_part(Instrument.ORGAN.CHURCH_ORGAN), 0),
+    (test_comp.new_part(Instrument.ORGAN.CHURCH_ORGAN), 0),
+    (test_comp.new_part(Instrument.ORGAN.CHURCH_ORGAN), -12),
+]:
+    pitch0 = pitch00 + pitch_delta
+    time = Time(0)
+    while time.value < 4 * 16:
+        k = random.choice([0.5, 1, 1, 2])
+
+        if random.random() < 0.5:
+            time = time + k * motif_duration
+
+        motif1a = motif1.copy()
+        # permute
+        if random.random() < 0.5:
+            motif1a.reverse()
+
+            if random.random() < 0.5:
+                random.shuffle(motif1a)
+
+        for interval, duration0 in motif1a:
+            duration = duration0 * k
+            note = Note(time, pitch0 + interval, duration, Volume.FORTE)
+            part + note
+            time = time + duration
+
 
 os.startfile(test_comp.write())
