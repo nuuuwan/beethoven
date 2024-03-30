@@ -18,7 +18,12 @@ class Composition:
 
     @staticmethod
     def new(title: str):
-        midi = MIDIFile(32)
+        midi = MIDIFile(
+            numTracks=32,
+            # If adjust_origin is True the library will find the earliest event
+            # in all the tracks and shift all events so that that time is t=0.
+            adjust_origin=False,
+        )
         return Composition(title, midi, [])
 
     def set_tempo(self, time: Time, tempo: int):
